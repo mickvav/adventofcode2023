@@ -16,9 +16,9 @@ func TestReadlines(t *testing.T) {
 			"Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11",
 		))
 	if res1 != 13 {
-		t.Fail()
+		t.Errorf("Expected res1 to be 13, got %d", res1)
 	}
 	if res2 != 30 {
-		t.Fail()
+		t.Errorf("Expected res2 to be 30, got %d", res2)
 	}
 }
