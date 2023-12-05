@@ -116,7 +116,7 @@ func Readlines(file io.Reader) (int, int) {
 func main() {
 	file, err := os.Open("input.txt")
 	if err != nil {
-		log.Fatal("Ups")
+		log.Fatal("Error opening input file: ", err)
 	}
 	defer file.Close()
 	f, f1 := Readlines(file)
