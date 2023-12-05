@@ -107,7 +107,7 @@ func Readlines(file io.Reader) (int, int) {
 			copies.take(s.number)
 			copies.win(s.number, s.Matches())	
 		} else {
-			fmt.Printf("Problem parsing: %s ", l)
+			fmt.Printf("Problem parsing: %s\n", l)
 		}
 	}
 	return res, copies.count()
