@@ -39,11 +39,15 @@ humidity-to-location map:
 60 56 37
 56 93 4
 `
+
 func TestReadlines(t *testing.T) {
-	res1, _:= Readlines(
+	res1, res2 := Readlines(
 		strings.NewReader(testInput),
-		)
+	)
 	if res1 != 35 {
+		t.Fail()
+	}
+	if res2 != 46 {
 		t.Fail()
 	}
 }
