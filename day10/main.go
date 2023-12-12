@@ -15,6 +15,7 @@ type Input struct {
 	marks map[dir]bool
 	srow  int
 	scol  int
+	sltr  string
 }
 
 func ReadInput(scanner *bufio.Scanner) Input {
@@ -187,6 +188,15 @@ func fillNextDir() {
 		}
 	}
 }
+
+func initialLetter(angles []dir) string {
+	for k, v := range ltrs {
+		if (v[0] == angles[0] && v[1] == angles[1]) || (v[0] == angles[1] && v[1] == angles[0]) {
+			return string([]byte{k})
+		}
+	}
+	return "."
+}
 func (inp Input) Count() (int, int) {
 	s1 := 0
 	s2 := 0
@@ -196,6 +206,7 @@ func (inp Input) Count() (int, int) {
 		return 0, 0
 	}
 	s1 = 1
+	inp.sltr = initialLetter(angles)
 	var e1, e2 error
 	e1 = nil
 	e2 = nil
@@ -206,18 +217,62 @@ func (inp Input) Count() (int, int) {
 		inp.mark(pos[1])
 		s1 += 1
 	}
-	in := false
+	state := 0 // 0 - out, 1 - below, 2 - above, 3 - in
 	for i, v := range inp.m {
+		state = 0
 		for i2, v2 := range strings.Split(v, "") {
 			p := dir{col: i2, row: i}
-			if v, ok := inp.marks[p]; ok && v {
-				if v2 == "|" {
-					in = !in
+
+			if v, ok := inp.marks[p]; (ok && v) || v2 == "S" {
+				v3 := v2
+				if v2 == "S" {
+					v3 = inp.sltr
+				}
+				switch v3 {
+				case "|":
+					switch state {
+					case 0:
+						state = 3
+					case 3:
+						state = 0
+					}
+
+				case "F":
+					switch state {
+					case 0:
+						state = 1
+					case 3:
+						state = 2
+					}
+
+				case "J":
+					switch state {
+					case 1:
+						state = 3
+					case 2:
+						state = 0
+					}
+
+				case "7":
+					switch state {
+					case 1:
+						state = 0
+					case 2:
+						state = 3
+					}
+
+				case "L":
+					switch state {
+					case 0:
+						state = 2
+					case 3:
+						state = 1
+					}
 				}
 			}
-			if v2 == "." && in {
+			if _, ok := inp.marks[p]; !ok && state == 3 {
 				s2 += 1
-				println(p.row, p.col)
+				//println(p.row, p.col)
 			}
 		}
 	}
