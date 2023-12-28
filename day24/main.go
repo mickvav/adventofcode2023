@@ -456,14 +456,13 @@ func (inp *Input) MinimiseAlongaxis(start Hail, axis Hail) (Hail, float64) {
 	f := func(x float64) float64 {
 		return inp.TotalFunctional(start.AddMult(axis, x))
 	}
-	tol := 1e-10
+	tol := 1e-8
 	maxIter := 500
 	fnMaxFev := func(nfev int) bool { return nfev > 1500 }
 	bm := optimize.NewBrentMinimizer(f, tol, maxIter, fnMaxFev)
-	bm.Brack = []float64{-100, 100}
-//	x, fx, nIter, nFev := bm.Optimize()
-	x, fx, _, _ := bm.Optimize()
-//	fmt.Printf("x: %.8g, fx: %.8g, nIter: %d, nFev: %d\n", x, fx, nIter, nFev)
+	bm.Brack = []float64{-1000, 1000}
+	x, fx, nIter, nFev := bm.Optimize()
+	fmt.Printf("x: %.8g, fx: %.8g, nIter: %d, nFev: %d\n", x, fx, nIter, nFev)
 
 	return start.AddMult(axis, x), fx
 }
@@ -542,52 +541,46 @@ func (inp *Input) MinimizePowell() Hail {
 func (inp *Input) MinimizeFull() Hail {
 
 	res := Hail{}
-	it := 1
-	dx := float64(1.0)
+	tol := 0.05
 	for {
-		it += 1
-		if it % 1000 == 0 {
-			dx = dx/2.0
-		}
-
-		axis := Hail{d: dir{x: dx}}
+		axis := Hail{d: dir{x: 1}}
 		s := 0.0
 		res, s = inp.MinimiseAlongaxis(res, axis)
-		if math.Abs(s) < 1.0e-20 {
+		if math.Abs(s) < tol {
 			return res
 		}
-		fmt.Printf("%d %f\n", it, s)
-		axis = Hail{d: dir{y: dx}}
+		fmt.Printf("%f\n", s)
+		axis = Hail{d: dir{y: 1}}
 		res, s = inp.MinimiseAlongaxis(res, axis)
-		if math.Abs(s) < 1.0e-20 {
+		if math.Abs(s) < tol {
 			return res
 		}
-//		fmt.Printf("%f\n", s)
-		axis = Hail{d: dir{z: dx}}
+		fmt.Printf("%f\n", s)
+		axis = Hail{d: dir{z: 1}}
 		res, s = inp.MinimiseAlongaxis(res, axis)
-		if math.Abs(s) < 1.0e-20 {
+		if math.Abs(s) < tol {
 			return res
 		}
-//		fmt.Printf("%f\n", s)
+		fmt.Printf("%f\n", s)
 
-		axis = Hail{p: pos{x: dx}}
+		axis = Hail{p: pos{x: 1}}
 		res, s = inp.MinimiseAlongaxis(res, axis)
-		if math.Abs(s) < 1.0e-20 {
+		if math.Abs(s) < tol {
 			return res
 		}
-//		fmt.Printf("%f\n", s)
-		axis = Hail{p: pos{y: dx}}
+		fmt.Printf("%f\n", s)
+		axis = Hail{p: pos{y: 1}}
 		res, s = inp.MinimiseAlongaxis(res, axis)
-		if math.Abs(s) < 1.0e-20 {
+		if math.Abs(s) < tol {
 			return res
 		}
-//		fmt.Printf("%f\n", s)
-		axis = Hail{p: pos{z: dx}}
+		fmt.Printf("%f\n", s)
+		axis = Hail{p: pos{z: 1}}
 		res, s = inp.MinimiseAlongaxis(res, axis)
-		if math.Abs(s) < 1.0e-20 {
+		if math.Abs(s) < tol {
 			return res
 		}
-//		fmt.Printf("%f\n", s)
+		fmt.Printf("%f\n", s)
 		fmt.Printf("%v\n", res)
 	}
 }
@@ -642,7 +635,7 @@ func (h1 Hail) GoesThroughBbox2D() bool {
 }
 
 func (h1 Hail) String() string {
-	return fmt.Sprintf("%f, %f , %f @ %f, %f, %f", h1.p.x, h1.p.y, h1.p.z , h1.d.x, h1.d.y, h1.d.z)
+	return fmt.Sprintf("%f, %f @ %f, %f", h1.p.x, h1.p.y, h1.d.x, h1.d.y)
 }
 
 func (p pos) String() string {

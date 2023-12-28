@@ -21,6 +21,12 @@ func TestInput_Count(t *testing.T) {
 		want2 int
 	}{
 		{
+			name:  "s2",
+			input: "?? 1",
+			want1: 2,
+			want2: 462,
+		},
+		{
 			name: "simple",
 			input: `#.#.### 1,1,3
 .#...#....###. 1,1,3
@@ -165,6 +171,24 @@ func TestLineIterator_Step(t *testing.T) {
 			hint:     uint128{hi: 0, lo: 0b0100000000},
 			newstate: []uint64{2, 1, 2},
 			// ..##.###.. -> 0b0011101100
+		},
+		{
+			name: "hinted2",
+			fields: fields{
+				length:        10,
+				damagedlength: 5,
+				checksums:     []uint64{2, 3},
+				state:         []uint64{3, 1, 1},
+				// ...##.###. -> 0b0111011000
+
+			},
+			want: true,
+			// ...##.###.
+			// .....!....
+			hint:     uint128{hi: 0, lo: 0b0000100000},
+			newstate: []uint64{2, 1, 2},
+			// ..##.###.. -> 0b0011101100
+
 		},
 
 		{
