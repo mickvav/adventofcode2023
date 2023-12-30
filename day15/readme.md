@@ -1,4 +1,4 @@
---- Day 15: Lens Library ---
+# --- Day 15: Lens Library ---
 The newly-focused parabolic reflector dish is sending all of the collected light to a point on the side of yet another mountain - the largest mountain on Lava Island. As you approach the mountain, you find that the light is being collected by the wall of a large facility embedded in the mountainside.
 
 You find a door under a large sign that says "Lava Production Facility" and next to a smaller sign that says "Danger - Personal Protective Equipment required beyond this point".
@@ -21,6 +21,7 @@ After following these steps for each character in the string in order, the curre
 
 So, to find the result of running the HASH algorithm on the string HASH:
 
+```
 The current value starts at 0.
 The first character is H; its ASCII code is 72.
 The current value increases to 72.
@@ -39,14 +40,17 @@ The current value increases to 244.
 The current value is multiplied by 17 to become 4148.
 The current value becomes 52 (the remainder of 4148 divided by 256).
 So, the result of running the HASH algorithm on the string HASH is 52.
+```
 
 The initialization sequence (your puzzle input) is a comma-separated list of steps to start the Lava Production Facility. Ignore newline characters when parsing the initialization sequence. To verify that your HASH algorithm is working, the book offers the sum of the result of running the HASH algorithm on each step in the initialization sequence.
 
 For example:
 
 rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7
+
 This initialization sequence specifies 11 individual steps; the result of running the HASH algorithm on each of the steps is as follows:
 
+```
 rn=1 becomes 30.
 cm- becomes 253.
 qp=3 becomes 97.
@@ -58,22 +62,25 @@ ab=5 becomes 197.
 pc- becomes 48.
 pc=6 becomes 214.
 ot=7 becomes 231.
+```
 In this example, the sum of these results is 1320. Unfortunately, the reindeer has stolen the page containing the expected verification number and is currently running around the facility with it excitedly.
 
 Run the HASH algorithm on each step in the initialization sequence. What is the sum of the results? (The initialization sequence is one long line; be careful when copy-pasting it.)
 
 Your puzzle answer was 516070.
 
---- Part Two ---
+## --- Part Two ---
 You convince the reindeer to bring you the page; the page confirms that your HASH algorithm is working.
 
 The book goes on to describe a series of 256 boxes numbered 0 through 255. The boxes are arranged in a line starting from the point where light enters the facility. The boxes have holes that allow light to pass from one box to the next all the way down the line.
 
+```
       +-----+  +-----+         +-----+
 Light | Box |  | Box |   ...   | Box |
 ----------------------------------------->
       |  0  |  |  1  |   ...   | 255 |
       +-----+  +-----+         +-----+
+```
 Inside each box, there are several lens slots that will keep a lens correctly positioned to focus light passing through the box. The side of each box has a panel that opens to allow you to insert or remove lenses as necessary.
 
 Along the wall running parallel to the boxes is a large library containing lenses organized by focal length ranging from 1 through 9. The reindeer also brings you a small handheld label printer.
