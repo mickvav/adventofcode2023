@@ -1,4 +1,4 @@
---- Day 7: Camel Cards ---
+# --- Day 7: Camel Cards ---
 Your all-expenses-paid trip turns out to be a one-way, five-minute ride in an airship. (At least it's a cool airship!) It drops you off at the edge of a vast desert and descends back to Island Island.
 
 "Did you bring the parts?"
@@ -34,11 +34,13 @@ So, 33332 and 2AAAA are both four of a kind hands, but 33332 is stronger because
 
 To play Camel Cards, you are given a list of hands and their corresponding bid (your puzzle input). For example:
 
+```
 32T3K 765
 T55J5 684
 KK677 28
 KTJJT 220
 QQQJA 483
+```
 This example shows five hands; each hand is followed by its bid amount. Each hand wins an amount equal to its bid multiplied by its rank, where the weakest hand gets rank 1, the second-weakest hand gets rank 2, and so on up to the strongest hand. Because there are five hands in this example, the strongest hand will have rank 5 and its bid will be multiplied by 5.
 
 So, the first step is to put the hands in order of strength:
@@ -52,7 +54,7 @@ Find the rank of every hand in your set. What are the total winnings?
 
 Your puzzle answer was 253866470.
 
---- Part Two ---
+## --- Part Two ---
 To make things a little more interesting, the Elf introduces one additional rule. Now, J cards are jokers - wildcards that can act like whatever card would make the hand the strongest type possible.
 
 To balance this, J cards are now the weakest individual cards, weaker even than 2. The other cards stay in the same order: A, K, Q, T, 9, 8, 7, 6, 5, 4, 3, 2, J.
@@ -61,11 +63,14 @@ J cards can pretend to be whatever card is best for the purpose of determining h
 
 Now, the above example goes very differently:
 
+```
 32T3K 765
 T55J5 684
 KK677 28
 KTJJT 220
 QQQJA 483
+```
+
 32T3K is still the only one pair; it doesn't contain any jokers, so its strength doesn't increase.
 KK677 is now the only two pair, making it the second-weakest hand.
 T55J5, KTJJT, and QQQJA are now all four of a kind! T55J5 gets rank 3, QQQJA gets rank 4, and KTJJT gets rank 5.
