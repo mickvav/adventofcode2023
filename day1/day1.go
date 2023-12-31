@@ -2,17 +2,23 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io"
 	"log"
 	"os"
 	"regexp"
+	"runtime/pprof"
 	"strconv"
 	"strings"
+	"time"
 )
 
+var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+
+var digits = regexp.MustCompile("[0-9]")
+
 func getCalibrationValue(s string) int {
-	digits := regexp.MustCompile("[0-9]")
 	v1 := ""
 	v2 := ""
 	for _, v := range strings.Split(s, "") {
@@ -64,19 +70,30 @@ func Readlines(file io.Reader) int {
 		res += getCalibrationValue(s)
 
 		cv2 := getCalibrationValue2(s, regexps)
-		fmt.Println(s, cv2)
+		//		fmt.Println(s, cv2)
 		res2 += cv2
 	}
-	fmt.Println(res)
-	fmt.Println(res2)
+	//	fmt.Println(res)
+	//	fmt.Println(res2)
 	return res
 }
 
 func main() {
+	flag.Parse()
+	if *cpuprofile != "" {
+		f, err := os.Create(*cpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
+	n := time.Now()
 	file, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatal("Ups")
 	}
 	defer file.Close()
 	fmt.Println(strconv.Itoa(Readlines(file)))
+	fmt.Println(time.Since(n))
 }

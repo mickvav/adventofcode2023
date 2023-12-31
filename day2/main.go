@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type game struct {
@@ -86,10 +87,12 @@ func Readlines(file io.Reader) int {
 }
 
 func main() {
+	n := time.Now()
 	file, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatal("Ups")
 	}
 	defer file.Close()
 	fmt.Println(strconv.Itoa(Readlines(file)))
+	fmt.Print(time.Since(n))
 }

@@ -1,189 +1,98 @@
---- Day 10: Pipe Maze ---
-You use the hang glider to ride the hot air from Desert Island all the way up to the floating metal island. This island is surprisingly cold and there definitely aren't any thermals to glide on, so you leave your hang glider behind.
+--- Day 17: Clumsy Crucible ---
+The lava starts flowing rapidly once the Lava Production Facility is operational. As you leave, the reindeer offers you a parachute, allowing you to quickly reach Gear Island.
 
-You wander around for a while, but you don't find any people or animals. However, you do occasionally find signposts labeled "Hot Springs" pointing in a seemingly consistent direction; maybe you can find someone at the hot springs and ask them where the desert-machine parts are made.
+As you descend, your bird's-eye view of Gear Island reveals why you had trouble finding anyone on your way up: half of Gear Island is empty, but the half below you is a giant factory city!
 
-The landscape here is alien; even the flowers and trees are made of metal. As you stop to admire some metal grass, you notice something metallic scurry away in your peripheral vision and jump into a big pipe! It didn't look like any animal you've ever seen; if you want a better look, you'll need to get ahead of it.
+You land near the gradually-filling pool of lava at the base of your new lavafall. Lavaducts will eventually carry the lava throughout the city, but to make use of it immediately, Elves are loading it into large crucibles on wheels.
 
-Scanning the area, you discover that the entire field you're standing on is densely packed with pipes; it was hard to tell at first because they're the same metallic silver color as the "ground". You make a quick sketch of all of the surface pipes you can see (your puzzle input).
+The crucibles are top-heavy and pushed by hand. Unfortunately, the crucibles become very difficult to steer at high speeds, and so it can be hard to go in a straight line for very long.
 
-The pipes are arranged in a two-dimensional grid of tiles:
+To get Desert Island the machine parts it needs as soon as possible, you'll need to find the best way to get the crucible from the lava pool to the machine parts factory. To do this, you need to minimize heat loss while choosing a route that doesn't require the crucible to go in a straight line for too long.
 
-| is a vertical pipe connecting north and south.
-- is a horizontal pipe connecting east and west.
-L is a 90-degree bend connecting north and east.
-J is a 90-degree bend connecting north and west.
-7 is a 90-degree bend connecting south and west.
-F is a 90-degree bend connecting south and east.
-. is ground; there is no pipe in this tile.
-S is the starting position of the animal; there is a pipe on this tile, but your sketch doesn't show what shape the pipe has.
-Based on the acoustics of the animal's scurrying, you're confident the pipe that contains the animal is one large, continuous loop.
+Fortunately, the Elves here have a map (your puzzle input) that uses traffic patterns, ambient temperature, and hundreds of other parameters to calculate exactly how much heat loss can be expected for a crucible entering any particular city block.
 
-For example, here is a square loop of pipe:
+For example:
 
-.....
-.F-7.
-.|.|.
-.L-J.
-.....
-If the animal had entered this loop in the northwest corner, the sketch would instead look like this:
+2413432311323
+3215453535623
+3255245654254
+3446585845452
+4546657867536
+1438598798454
+4457876987766
+3637877979653
+4654967986887
+4564679986453
+1224686865563
+2546548887735
+4322674655533
+Each city block is marked by a single digit that represents the amount of heat loss if the crucible enters that block. The starting point, the lava pool, is the top-left city block; the destination, the machine parts factory, is the bottom-right city block. (Because you already start in the top-left block, you don't incur that block's heat loss unless you leave that block and then return to it.)
 
-.....
-.S-7.
-.|.|.
-.L-J.
-.....
-In the above diagram, the S tile is still a 90-degree F bend: you can tell because of how the adjacent pipes connect to it.
+Because it is difficult to keep the top-heavy crucible going in a straight line for very long, it can move at most three blocks in a single direction before it must turn 90 degrees left or right. The crucible also can't reverse direction; after entering each city block, it may only turn left, continue straight, or turn right.
 
-Unfortunately, there are also many pipes that aren't connected to the loop! This sketch shows the same loop as above:
+One way to minimize heat loss is this path:
 
--L|F7
-7S-7|
-L|7||
--L-J|
-L|-JF
-In the above diagram, you can still figure out which pipes form the main loop: they're the ones connected to S, pipes those pipes connect to, pipes those pipes connect to, and so on. Every pipe in the main loop connects to its two neighbors (including S, which will have exactly two pipes connecting to it, and which is assumed to connect back to those two pipes).
+2>>34^>>>1323
+32v>>>35v5623
+32552456v>>54
+3446585845v52
+4546657867v>6
+14385987984v4
+44578769877v6
+36378779796v>
+465496798688v
+456467998645v
+12246868655<v
+25465488877v5
+43226746555v>
+This path never moves more than three consecutive blocks in the same direction and incurs a heat loss of only 102.
 
-Here is a sketch that contains a slightly more complex main loop:
+Directing the crucible from the lava pool to the machine parts factory, but not moving more than three consecutive blocks in the same direction, what is the least heat loss it can incur?
 
-..F7.
-.FJ|.
-SJ.L7
-|F--J
-LJ...
-Here's the same example sketch with the extra, non-main-loop pipe tiles also shown:
-
-7-F7-
-.FJ|7
-SJLL7
-|F--J
-LJ.LJ
-If you want to get out ahead of the animal, you should find the tile in the loop that is farthest from the starting position. Because the animal is in the pipe, it doesn't make sense to measure this by direct distance. Instead, you need to find the tile that would take the longest number of steps along the loop to reach from the starting point - regardless of which way around the loop the animal went.
-
-In the first example with the square loop:
-
-.....
-.S-7.
-.|.|.
-.L-J.
-.....
-You can count the distance each tile in the loop is from the starting point like this:
-
-.....
-.012.
-.1.3.
-.234.
-.....
-In this example, the farthest point from the start is 4 steps away.
-
-Here's the more complex loop again:
-
-..F7.
-.FJ|.
-SJ.L7
-|F--J
-LJ...
-Here are the distances for each tile on that loop:
-
-..45.
-.236.
-01.78
-14567
-23...
-Find the single giant loop starting at S. How many steps along the loop does it take to get from the starting position to the point farthest from the starting position?
-
-Your puzzle answer was 6870.
+Your puzzle answer was 866.
 
 --- Part Two ---
-You quickly reach the farthest point of the loop, but the animal never emerges. Maybe its nest is within the area enclosed by the loop?
+The crucibles of lava simply aren't large enough to provide an adequate supply of lava to the machine parts factory. Instead, the Elves are going to upgrade to ultra crucibles.
 
-To determine whether it's even worth taking the time to search for such a nest, you should calculate how many tiles are contained within the loop. For example:
+Ultra crucibles are even more difficult to steer than normal crucibles. Not only do they have trouble going in a straight line, but they also have trouble turning!
 
-...........
-.S-------7.
-.|F-----7|.
-.||.....||.
-.||.....||.
-.|L-7.F-J|.
-.|..|.|..|.
-.L--J.L--J.
-...........
-The above loop encloses merely four tiles - the two pairs of . in the southwest and southeast (marked I below). The middle . tiles (marked O below) are not in the loop. Here is the same loop again with those regions marked:
+Once an ultra crucible starts moving in a direction, it needs to move a minimum of four blocks in that direction before it can turn (or even before it can stop at the end). However, it will eventually start to get wobbly: an ultra crucible can move a maximum of ten consecutive blocks without turning.
 
-...........
-.S-------7.
-.|F-----7|.
-.||OOOOO||.
-.||OOOOO||.
-.|L-7OF-J|.
-.|II|O|II|.
-.L--JOL--J.
-.....O.....
-In fact, there doesn't even need to be a full tile path to the outside for tiles to count as outside the loop - squeezing between pipes is also allowed! Here, I is still within the loop and O is still outside the loop:
+In the above example, an ultra crucible could follow this path to minimize heat loss:
 
-..........
-.S------7.
-.|F----7|.
-.||OOOO||.
-.||OOOO||.
-.|L-7F-J|.
-.|II||II|.
-.L--JL--J.
-..........
-In both of the above examples, 4 tiles are enclosed by the loop.
+2>>>>>>>>1323
+32154535v5623
+32552456v4254
+34465858v5452
+45466578v>>>>
+143859879845v
+445787698776v
+363787797965v
+465496798688v
+456467998645v
+122468686556v
+254654888773v
+432267465553v
+In the above example, an ultra crucible would incur the minimum possible heat loss of 94.
 
-Here's a larger example:
+Here's another example:
 
-.F----7F7F7F7F-7....
-.|F--7||||||||FJ....
-.||.FJ||||||||L7....
-FJL7L7LJLJ||LJ.L-7..
-L--J.L7...LJS7F-7L7.
-....F-J..F7FJ|L7L7L7
-....L7.F7||L7|.L7L7|
-.....|FJLJ|FJ|F7|.LJ
-....FJL-7.||.||||...
-....L---J.LJ.LJLJ...
-The above sketch has many random bits of ground, some of which are in the loop (I) and some of which are outside it (O):
+111111111111
+999999999991
+999999999991
+999999999991
+999999999991
+Sadly, an ultra crucible would need to take an unfortunate path like this one:
 
-OF----7F7F7F7F-7OOOO
-O|F--7||||||||FJOOOO
-O||OFJ||||||||L7OOOO
-FJL7L7LJLJ||LJIL-7OO
-L--JOL7IIILJS7F-7L7O
-OOOOF-JIIF7FJ|L7L7L7
-OOOOL7IF7||L7|IL7L7|
-OOOOO|FJLJ|FJ|F7|OLJ
-OOOOFJL-7O||O||||OOO
-OOOOL---JOLJOLJLJOOO
-In this larger example, 8 tiles are enclosed by the loop.
+1>>>>>>>1111
+9999999v9991
+9999999v9991
+9999999v9991
+9999999v>>>>
+This route causes the ultra crucible to incur the minimum possible heat loss of 71.
 
-Any tile that isn't part of the main loop can count as being enclosed by the loop. Here's another example with many bits of junk pipe lying around that aren't connected to the main loop at all:
+Directing the ultra crucible from the lava pool to the machine parts factory, what is the least heat loss it can incur?
 
-FF7FSF7F7F7F7F7F---7
-L|LJ||||||||||||F--J
-FL-7LJLJ||||||LJL-77
-F--JF--7||LJLJ7F7FJ-
-L---JF-JLJ.||-FJLJJ7
-|F|F-JF---7F7-L7L|7|
-|FFJF7L7F-JF7|JL---7
-7-L-JL7||F7|L7F-7F7|
-L.L7LFJ|||||FJL7||LJ
-L7JLJL-JLJLJL--JLJ.L
-Here are just the tiles that are enclosed by the loop marked with I:
+Your puzzle answer was 1010.
 
-FF7FSF7F7F7F7F7F---7
-L|LJ||||||||||||F--J
-FL-7LJLJ||||||LJL-77
-F--JF--7||LJLJIF7FJ-
-L---JF-JLJIIIIFJLJJ7
-|F|F-JF---7IIIL7L|7|
-|FFJF7L7F-JF7IIL---7
-7-L-JL7||F7|L7F-7F7|
-L.L7LFJ|||||FJL7||LJ
-L7JLJL-JLJLJL--JLJ.L
-In this last example, 10 tiles are enclosed by the loop.
-
-Figure out whether you have time to search for the nest by calculating the area within the loop. How many tiles are enclosed by the loop?
-
-Your puzzle answer was 287.
+Both parts of this puzzle are complete! They provide two gold stars: **
