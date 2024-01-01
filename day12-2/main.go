@@ -2,10 +2,13 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io"
 	"log"
 	"os"
+	"runtime"
+	"runtime/pprof"
 	"strconv"
 	"strings"
 	"time"
@@ -110,7 +113,7 @@ func (m *mMatcher) Mask(msk mask) map[intStructure]uint16 {
 			checksum++
 		}
 	}
-	fmt.Printf("Mask : %v, checksum : %d\n", msk, checksum)
+	//	fmt.Printf("Mask : %v, checksum : %d\n", msk, checksum)
 	return m.h[msk]
 }
 
@@ -228,10 +231,10 @@ func ReadInput(scanner *bufio.Scanner) Input {
 	return res
 }
 
-func countmhs(inp intStructure, mhs []map[intStructure]uint16, l *Line) uint64 {
+func countmhs(inp intStructure, mhs []*map[intStructure]uint16, l *Line) uint64 {
 	if len(mhs) == 1 {
 		s := uint64(0)
-		for is, v := range mhs[0] {
+		for is, v := range *(mhs[0]) {
 			if inp.Concat(is).Matches(l.checksums) {
 				s += uint64(v)
 			}
@@ -240,7 +243,7 @@ func countmhs(inp intStructure, mhs []map[intStructure]uint16, l *Line) uint64 {
 	} else {
 		s := uint64(0)
 		hcs := map[intStructure]uint64{}
-		for is, v := range mhs[0] {
+		for is, v := range *mhs[0] {
 			cs := inp.Concat(is)
 			if cmhs, ok := hcs[cs]; ok {
 				s += uint64(v) * cmhs
@@ -260,20 +263,20 @@ func (inp Input) Count() (int, uint64) {
 	s1 := 0
 	s2 := uint64(0)
 	for _, l := range inp.m {
-		mhs := []map[intStructure]uint16{}
+		mhs := []*map[intStructure]uint16{}
 		for _, m := range l.masks {
 			mh := inp.mh.Mask(m)
-			mhs = append(mhs, mh)
+			mhs = append(mhs, &mh)
 		}
 		fmt.Print(".")
 		s1 += int(countmhs(intStructure([]byte{0}), mhs, &l))
 	}
 	for idx, l := range inp.m5 {
-		mhs := []map[intStructure]uint16{}
+		mhs := []*map[intStructure]uint16{}
 		n := time.Now()
 		for _, m := range l.masks {
 			mh := inp.mh.Mask(m)
-			mhs = append(mhs, mh)
+			mhs = append(mhs, &mh)
 		}
 		s2 += countmhs(intStructure([]byte{0}), mhs, &l)
 		fmt.Println(time.Since(n), " ", idx, " ", l.length)
@@ -293,8 +296,20 @@ func init() {
 		IntervalStructure[i] = guess(i).calcIntervalStructure()
 	}
 }
-func main() {
 
+var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+
+func main() {
+	flag.Parse()
+	if *cpuprofile != "" {
+		runtime.SetCPUProfileRate(1000)
+		f, err := os.Create(*cpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
 	file, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatal("Ups")
